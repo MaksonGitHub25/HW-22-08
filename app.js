@@ -10,7 +10,7 @@ const category = {
     sea: ['cavy', 'tuna', 'clown fish']
 };
 
-function Animal(name, age, voice, category) {
+function Animal(name, age, voice, category, id) {
     {
         this.name = name,
         this.age = age,
@@ -18,7 +18,8 @@ function Animal(name, age, voice, category) {
         this.giveVoice = function () {
             console.log(voice);
         },
-        this.category = category
+        this.category = category,
+        this.id = id
     }
 }
 
@@ -28,7 +29,9 @@ function menu() {
 2) Все животные
 3) Добавить животное
 4) Удалить животное
-5) Выйти`);
+5) Сортировать список животных
+6) Фильтровать по категории
+7) Выйти`);
 
     checkUserInput(userFunctionChoosen);
 
@@ -36,7 +39,10 @@ function menu() {
 }
 
 function checkUserInput(userFunctionChoosen) {
-    if (/1|2|3|4|5/.test(userFunctionChoosen)) {
+    if (
+        /1|2|3|4|5|6|7/g.test(userFunctionChoosen) &&
+        !isNaN(+userFunctionChoosen)
+    ) {
         return;
     } else {
         alert('Ты ввел неверное значение!');
@@ -46,9 +52,11 @@ function checkUserInput(userFunctionChoosen) {
 }
 
 function functionChooseHandler(choosenFunc) {
-    // const functionArray = [showChoosenCategory, showAllAnimals, addNewAnimal, deleteAnimal, exit];
-    // functionArray[+choosenFunc - 1]();
+    // 1st variant
+    // const functionArray = [showChoosenCategory, showAllAnimals, addNewAnimal, deleteAnimal, sortingAnimalArray, filterAnimalsInArray, exit];
+    // functionArray[+choosenFunc - 1](animalArray);
 
+    // 2nd variant
     switch (choosenFunc) {
         case '1':
             showChoosenCategory(animalArray);
@@ -67,6 +75,14 @@ function functionChooseHandler(choosenFunc) {
             break;
 
         case '5':
+            sortingAnimalArray(animalArray);
+            break;
+
+        case '6':
+            filterAnimalsInArray(animalArray);
+            break;
+
+        case '7':
             exit(animalArray);
             break;
     
@@ -74,7 +90,7 @@ function functionChooseHandler(choosenFunc) {
             break;
     }
 
-    if (choosenFunc != '5') {
+    if (choosenFunc != '7') {
         menu();
         return;
     }
@@ -83,7 +99,26 @@ function functionChooseHandler(choosenFunc) {
 // ------------------------------------------
 
 function showChoosenCategory(animalArray) {
-    console.log('showChoosenCategory');
+    const choosenCategory = prompt('Животных какой категории тебе показать?');
+
+    if (!checkChoosenCategoryData(choosenCategory)) {
+        alert('Такой категории нету!');
+        showChoosenCategory(animalArray);
+        return;
+    }
+
+    animalArray.forEach(function (elem) {
+        if (elem.category === choosenCategory) {
+            alert(`name: ${elem.name}
+age: ${elem.age}
+voice: ${elem.voice}
+category: ${elem.category}`);
+        }
+    });
+}
+
+function checkChoosenCategoryData(choosenCategory) {
+    return Object.keys(category).some((elem) => elem === choosenCategory);
 }
 
 // ------------------------------------------
@@ -96,7 +131,8 @@ function showAllAnimals(animalArray) {
         animalArray.forEach((elem) => {
             alert(`name: ${elem.name}
 age: ${elem.age}
-voice: ${elem.voice}`);
+voice: ${elem.voice}
+category: ${elem.category}`);
         });
     }
 }
@@ -123,7 +159,7 @@ function addNewAnimal(animalArray) {
         return;
     }
 
-    const animal = new Animal(animalName, animalAge, animalVoice, animalCategory);
+    const animal = new Animal(animalName, animalAge, animalVoice, animalCategory, getRandomID());
     console.log(animal);
         
     if (animalArray.length === 0 || checkAnimalsNameOnSame(animalArray, animalName)) {
@@ -134,6 +170,10 @@ function addNewAnimal(animalArray) {
         addNewAnimal(animalArray);
         return;
     }
+}
+
+function getRandomID() {
+    return Math.floor(Math.random() * (999999 - 000001) + 000001);
 }
 
 function checkAnimalData(name, age, voice, category) {
@@ -196,6 +236,100 @@ function deleteAnimal(animalArray) {
 
 // ------------------------------------------
 
+function sortingAnimalArray(animalArray) {
+    if (isArrayEmpty(animalArray)) {
+        alert('Пока что нету никаких животных!');
+        return;
+    }
+
+    const sortingFunc = prompt('Как будем сортировать животных?\n1) По увеличению\n2) По уменьшению');
+
+    if (!checkSortingFuncData(sortingFunc)) {
+        alert('Данные не валидны!');
+        sortingAnimalArray(animalArray);
+        return;
+    }
+
+    switch (sortingFunc) {
+        case '1':
+            sortingByAscending(animalArray);
+            break;
+
+        case '2':
+            sortingByDecreasing(animalArray);
+            break;
+    
+        default:
+            break;
+    }
+
+    console.log(animalArray);
+}
+
+function checkSortingFuncData(sortingFunc) {
+    if (
+        /1|2/g.test(sortingFunc) &&
+        !isNaN(+sortingFunc)
+    ) {
+        return true;
+    }
+}
+
+function sortingByAscending(arrayForSort) {
+    arrayForSort.sort(function (a, b) {
+        if (+a.age > +b.age) {
+            return 1;
+        }
+        
+        if (+a.age < +b.age) {
+            return -1;
+        }
+
+        return 0;
+    });
+}
+
+function sortingByDecreasing(arrayForSort) {
+    arrayForSort.sort(function (a, b) {
+        if (+a.age < +b.age) {
+            return 1;
+        }
+        
+        if (+a.age > +b.age) {
+            return -1;
+        }
+
+        return 0;
+    });
+}
+
+// ------------------------------------------
+
+function filterAnimalsInArray(arrayForFilter) {
+    if (isArrayEmpty(animalArray)) {
+        alert('Пока что нету никаких животных!');
+        return;
+    }
+
+    const categoryForFilter = prompt('Выбери какую категорию хочешь оставить(все животные других категорий удалятся)?\nНапиши q, чтоб выйти');
+
+    if (categoryForFilter === 'q') {
+        return;
+    }
+
+    // arrayForFilter = arrayForFilter.filter((elem) => elem.category === categoryForFilter); //dont work, damn...
+
+    arrayForFilter.forEach(function (elem, index) {
+        if (elem.category !== categoryForFilter) {
+            arrayForFilter.splice(index, 1);
+        }
+    });
+
+    console.log(arrayForFilter);
+}
+
+// ------------------------------------------
+
 function exit() {
     alert('Хорошего дня!');
 }
@@ -208,28 +342,28 @@ btn.addEventListener('click', menu);
 
 //* Функция ферма
 //* Функционал :
-// 1) Просмотреть все категории =>
-// выбрать категорию => все животные
-// данной категории
+//* 1) Просмотреть все категории =>
+//* выбрать категорию => все животные
+//* данной категории
 //* 2) Все животные
 //* 3) Добавить животное
 //* 4) Удалить животное
 //* 5) Закончить работу с программой
 
-// 1) Создайте три объекта :
-// птица , скот , домашние животные .
-// В объектах ключами и айДи , категория
-// - значение будет массив
-// 2) При помощи функцииФермы мы
-// предоставляем юзеру возможность
-// производить новых животных в
-// массивах , животные появляются в виде
-// объектов с ключами : имя , возраст ,
-// издаваемый звук , издать звук
+//* 1) Создайте три объекта :
+//* птица , скот , домашние животные .
+//* В объектах ключами и айДи , категория
+//* - значение будет массив
+//* 2) При помощи функцииФермы мы
+//* предоставляем юзеру возможность
+//* производить новых животных в
+//* массивах , животные появляются в виде
+//* объектов с ключами : имя , возраст ,
+//* издаваемый звук , издать звук
 //* 3) В массиве не должно быть животных
-// с одинаковыми именами
-// 4) Животных можно сортировать по
-// возрасту , можно фильтровать по
-// категории
+//* с одинаковыми именами
+//* 4) Животных можно сортировать по
+//* возрасту , можно фильтровать по
+//* категории
 //* 5) Можно убирать и добавлять новых
 //* животных

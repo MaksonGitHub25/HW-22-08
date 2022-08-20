@@ -10,16 +10,63 @@ const category = {
     sea: ['cavy', 'tuna', 'clown fish']
 };
 
-function Animal(name, age, voice, category, id) {
-    {
+class Animal {
+    FUTURE_AGE = 10;
+
+    constructor(name, age, voice, category, id) {
         this.name = name,
         this.age = age,
         this.voice = voice,
-        this.giveVoice = function () {
-            console.log(voice);
-        },
         this.category = category,
         this.id = id
+        }
+    
+    giveVoice() {
+        console.log(this.voice);
+    }
+
+
+    calculateAnimalAge() {
+        console.log(`After ${this.FUTURE_AGE} years ur animal will be ${this.age + this.FUTURE_AGE} years old!`);
+    }
+
+    sleep() {}
+
+    eat() {}
+}
+
+class Cat extends Animal {
+    constructor(name, food) {
+        super(name);
+        this.food = food;
+    }
+
+    sleep() {
+        console.log(`${this.name} is sleep. Zzzzzzzzzzzzz`);
+    }
+
+    eat() {
+        console.log(`${this.name} is eating ${this.food} now`);
+    }
+
+    sayMeow() {
+        console.log('meow');
+    }
+
+    get getName() {
+        return this.name;
+    }
+
+    set setNewName(newName) {
+        this.name = newName;
+    }
+
+    get getAllDataV1() {
+        return this;
+    }
+
+    get getAllDataV2() {
+        return [this.name, this.age, this.voice, this.category, this.id, this.food];
     }
 }
 
@@ -31,7 +78,8 @@ function menu() {
 4) Удалить животное
 5) Сортировать список животных
 6) Фильтровать по категории
-7) Выйти`);
+7) Выйти
+8) Создать кота для текста`);
 
     checkUserInput(userFunctionChoosen);
 
@@ -40,7 +88,7 @@ function menu() {
 
 function checkUserInput(userFunctionChoosen) {
     if (
-        /1|2|3|4|5|6|7/g.test(userFunctionChoosen) &&
+        /1|2|3|4|5|6|7|8/g.test(userFunctionChoosen) &&
         !isNaN(+userFunctionChoosen)
     ) {
         return;
@@ -83,7 +131,11 @@ function functionChooseHandler(choosenFunc) {
             break;
 
         case '7':
-            exit(animalArray);
+            exit();
+            break;
+
+        case '8':
+            // createCatForTest();
             break;
     
         default:
@@ -334,36 +386,39 @@ function exit() {
     alert('Хорошего дня!');
 }
 
+// ------------------------------------------
 
-btn.addEventListener('click', menu);
+const animal = new Animal('hui', 18, 'uh', 'sea', 294389);
+const cat = new Cat('nigga', 'fish');
+
+function testClassOnCat() {
+    // animal.eat();
+    animal.sleep();
+    animal.calculateAnimalAge();
+    
+    // cat.eat();
+    // cat.sayMeow();
+    cat.sleep();
+}
+
+function changeCatName() {
+    console.log(cat.getName);
+    cat.setNewName = prompt('Введите новое имя животного:');
+    console.log(cat.getName);
+}
+
+function getAllAnimalData() {
+    console.log(cat.getAllDataV1);
+    console.log(cat.getAllDataV2);
+}
+
+
+btn.addEventListener('click', getAllAnimalData);
 
 
 
-
-//* Функция ферма
-//* Функционал :
-//* 1) Просмотреть все категории =>
-//* выбрать категорию => все животные
-//* данной категории
-//* 2) Все животные
-//* 3) Добавить животное
-//* 4) Удалить животное
-//* 5) Закончить работу с программой
-
-//* 1) Создайте три объекта :
-//* птица , скот , домашние животные .
-//* В объектах ключами и айДи , категория
-//* - значение будет массив
-//* 2) При помощи функцииФермы мы
-//* предоставляем юзеру возможность
-//* производить новых животных в
-//* массивах , животные появляются в виде
-//* объектов с ключами : имя , возраст ,
-//* издаваемый звук , издать звук
-//* 3) В массиве не должно быть животных
-//* с одинаковыми именами
-//* 4) Животных можно сортировать по
-//* возрасту , можно фильтровать по
-//* категории
-//* 5) Можно убирать и добавлять новых
-//* животных
+//* создать абстрактный класс для создания животных
+//* добавить возможность редактировать имя животного
+// дать каждому животному айДи, не вручную, а при помощи итератора
+//* создать функцию гет при помощи которой будем получать все данные о животном
+//? через прототип добавить возможность получать имя животного

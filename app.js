@@ -19,7 +19,7 @@ class Animal {
         this.voice = voice,
         this.category = category,
         this.id = id
-        }
+    }
     
     giveVoice() {
         console.log(this.voice);
@@ -79,7 +79,7 @@ function menu() {
 5) Сортировать список животных
 6) Фильтровать по категории
 7) Выйти
-8) Создать кота для текста`);
+8) Создать кота для теста`);
 
     checkUserInput(userFunctionChoosen);
 
@@ -135,7 +135,7 @@ function functionChooseHandler(choosenFunc) {
             break;
 
         case '8':
-            // createCatForTest();
+            testClassOnCat();
             break;
     
         default:
@@ -164,7 +164,8 @@ function showChoosenCategory(animalArray) {
             alert(`name: ${elem.name}
 age: ${elem.age}
 voice: ${elem.voice}
-category: ${elem.category}`);
+category: ${elem.category}
+id: ${elem.id}`);
         }
     });
 }
@@ -184,7 +185,8 @@ function showAllAnimals(animalArray) {
             alert(`name: ${elem.name}
 age: ${elem.age}
 voice: ${elem.voice}
-category: ${elem.category}`);
+category: ${elem.category}
+id: ${elem.id}`);
         });
     }
 }
@@ -211,11 +213,17 @@ function addNewAnimal(animalArray) {
         return;
     }
 
-    const animal = new Animal(animalName, animalAge, animalVoice, animalCategory, getRandomID());
+    //! var 1 (old)
+    //? const animal = new Animal(animalName, animalAge, animalVoice, animalCategory, getID(animalArray));
+    //? console.log(animal);
+    
+    //! var 2 (new)
+    const animal = new Animal(animalName, animalAge, animalVoice, animalCategory, 228);
     console.log(animal);
-        
+    
     if (animalArray.length === 0 || checkAnimalsNameOnSame(animalArray, animalName)) {
         animalArray.push(animal);
+        getIdEachAnimal(animalArray);
         console.log(animalArray);
     } else { 
         alert('Животное с таким именем уже существует!');
@@ -224,8 +232,20 @@ function addNewAnimal(animalArray) {
     }
 }
 
-function getRandomID() {
-    return Math.floor(Math.random() * (999999 - 000001) + 000001);
+function getIdEachAnimal(array) {
+    //! var 1
+    for (let i = 0; i < array.length; i++) {
+        array[i].id = i+1;
+    }
+
+    //! var 2
+    //? array.forEach(function (elem, index) {
+    //?     elem.id = index+1;
+    //? });
+}
+
+function getID(array) {
+    return array.length+1;
 }
 
 function checkAnimalData(name, age, voice, category) {
@@ -392,19 +412,19 @@ const animal = new Animal('hui', 18, 'uh', 'sea', 294389);
 const cat = new Cat('nigga', 'fish');
 
 function testClassOnCat() {
-    // animal.eat();
+    animal.eat();
     animal.sleep();
     animal.calculateAnimalAge();
     
-    // cat.eat();
-    // cat.sayMeow();
+    cat.eat();
+    cat.sayMeow();
     cat.sleep();
 }
 
-function changeCatName() {
-    console.log(cat.getName);
-    cat.setNewName = prompt('Введите новое имя животного:');
-    console.log(cat.getName);
+function changeCatName(newName) {
+    console.log('[old name]', cat.getName);
+    cat.setNewName = newName;
+    console.log('[new name]', cat.getName);
 }
 
 function getAllAnimalData() {
@@ -412,13 +432,23 @@ function getAllAnimalData() {
     console.log(cat.getAllDataV2);
 }
 
+function getAnimalNameByPrototype() {
+    Cat.prototype.getAnimalNameByPrototype = function () { return this.name }
 
-btn.addEventListener('click', getAllAnimalData);
+    console.log(cat.getAnimalNameByPrototype());
+
+    changeCatName(prompt('Введите новое имя животного:'));
+
+    console.log(cat.getAnimalNameByPrototype());
+}
+
+
+btn.addEventListener('click', menu);
 
 
 
 //* создать абстрактный класс для создания животных
 //* добавить возможность редактировать имя животного
-// дать каждому животному айДи, не вручную, а при помощи итератора
+//* дать каждому животному айДи, не вручную, а при помощи итератора
 //* создать функцию гет при помощи которой будем получать все данные о животном
-//? через прототип добавить возможность получать имя животного
+//?* через прототип добавить возможность получать имя животного

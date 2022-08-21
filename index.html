@@ -8,7 +8,29 @@
     <title>Site</title>
 </head>
 <body>
-    <button class="btn">Menu</button>
+    <div class="main-content">
+        <div class="btn-wrapper">
+            <div class="main-task-btn-wrapper">
+                <button class="main-task-btn">showChoosenCategory</button>
+                <button class="main-task-btn">showAllAnimals</button>
+                <button class="main-task-btn">addNewAnimal</button>
+                <button class="main-task-btn">deleteAnimal</button>
+                <button class="main-task-btn">sortingAnimalArray</button>
+                <button class="main-task-btn">filterAnimalsInArray</button>
+                <button class="main-task-btn">clearBlackboard</button>
+            </div>
+                
+            <div class="second-task-btn-wrapper">
+                <button class="second-task-btn">printAllTestInstans</button>
+                <button class="second-task-btn">testClassOnCat</button>
+                <button class="second-task-btn">changeCatName</button>
+                <button class="second-task-btn">getAllAnimalData</button>
+                <button class="second-task-btn">getAnimalNameByProto</button>
+            </div>
+        </div>
+
+        <textarea id="blackboard" cols="50" rows="18" readonly></textarea>
+    </div>
 
     <script src="./app.js"></script>
 </body>

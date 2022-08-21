@@ -1,4 +1,6 @@
-const btn = document.querySelector('.btn');
+const mainBtnArray = document.querySelectorAll('.main-task-btn');
+const secondBtnArray = document.querySelectorAll('.second-task-btn');
+const blackboard = document.querySelector('#blackboard');
 
 // alert('Привет пользователь! Это интернет магазин, в котором ты можешь купить любое животное(российского загарбника)');
 
@@ -70,83 +72,83 @@ class Cat extends Animal {
     }
 }
 
-function menu() {
-    const userFunctionChoosen = prompt(`Какую функцию выберем?
-1) Просмотреть конкретную категорию
-2) Все животные
-3) Добавить животное
-4) Удалить животное
-5) Сортировать список животных
-6) Фильтровать по категории
-7) Выйти
-8) Создать кота для теста`);
+// function menu() {
+//     const userFunctionChoosen = prompt(`Какую функцию выберем?
+// 1) Просмотреть конкретную категорию
+// 2) Все животные
+// 3) Добавить животное
+// 4) Удалить животное
+// 5) Сортировать список животных
+// 6) Фильтровать по категории
+// 7) Выйти
+// 8) Создать кота для теста`);
 
-    checkUserInput(userFunctionChoosen);
+//     checkUserInput(userFunctionChoosen);
 
-    functionChooseHandler(userFunctionChoosen);
-}
+//     functionChooseHandler(userFunctionChoosen);
+// }
 
-function checkUserInput(userFunctionChoosen) {
-    if (
-        /1|2|3|4|5|6|7|8/g.test(userFunctionChoosen) &&
-        !isNaN(+userFunctionChoosen)
-    ) {
-        return;
-    } else {
-        alert('Ты ввел неверное значение!');
-        menu();
-        return;
-    }
-}
+// function checkUserInput(userFunctionChoosen) {
+//     if (
+//         /1|2|3|4|5|6|7|8/g.test(userFunctionChoosen) &&
+//         !isNaN(+userFunctionChoosen)
+//     ) {
+//         return;
+//     } else {
+//         alert('Ты ввел неверное значение!');
+//         menu();
+//         return;
+//     }
+// }
 
-function functionChooseHandler(choosenFunc) {
-    // 1st variant
-    // const functionArray = [showChoosenCategory, showAllAnimals, addNewAnimal, deleteAnimal, sortingAnimalArray, filterAnimalsInArray, exit];
-    // functionArray[+choosenFunc - 1](animalArray);
+// function functionChooseHandler(choosenFunc) {
+//     // 1st variant
+//     // const functionArray = [showChoosenCategory, showAllAnimals, addNewAnimal, deleteAnimal, sortingAnimalArray, filterAnimalsInArray, exit];
+//     // functionArray[+choosenFunc - 1](animalArray);
 
-    // 2nd variant
-    switch (choosenFunc) {
-        case '1':
-            showChoosenCategory(animalArray);
-            break;
+//     // 2nd variant
+//     switch (choosenFunc) {
+//         case '1':
+//             showChoosenCategory(animalArray);
+//             break;
         
-        case '2':
-            showAllAnimals(animalArray);
-            break;
+//         case '2':
+//             showAllAnimals(animalArray);
+//             break;
 
-        case '3':
-            addNewAnimal(animalArray);
-            break;
+//         case '3':
+//             addNewAnimal(animalArray);
+//             break;
 
-        case '4':
-            deleteAnimal(animalArray);
-            break;
+//         case '4':
+//             deleteAnimal(animalArray);
+//             break;
 
-        case '5':
-            sortingAnimalArray(animalArray);
-            break;
+//         case '5':
+//             sortingAnimalArray(animalArray);
+//             break;
 
-        case '6':
-            filterAnimalsInArray(animalArray);
-            break;
+//         case '6':
+//             filterAnimalsInArray(animalArray);
+//             break;
 
-        case '7':
-            exit();
-            break;
+//         case '7':
+//             exit();
+//             break;
 
-        case '8':
-            testClassOnCat();
-            break;
+//         case '8':
+//             testClassOnCat();
+//             break;
     
-        default:
-            break;
-    }
+//         default:
+//             break;
+//     }
 
-    if (choosenFunc != '7') {
-        menu();
-        return;
-    }
-}
+//     if (choosenFunc != '7') {
+//         menu();
+//         return;
+//     }
+// }
 
 // ------------------------------------------
 
@@ -402,14 +404,19 @@ function filterAnimalsInArray(arrayForFilter) {
 
 // ------------------------------------------
 
-function exit() {
-    alert('Хорошего дня!');
+function clearBlackboard() {
+    addToBlackboard('');
 }
 
 // ------------------------------------------
 
 const animal = new Animal('hui', 18, 'uh', 'sea', 294389);
 const cat = new Cat('nigga', 'fish');
+
+function printAllTestInstans() {
+    console.log(animal);
+    console.log(cat);
+}
 
 function testClassOnCat() {
     animal.eat();
@@ -421,9 +428,9 @@ function testClassOnCat() {
     cat.sleep();
 }
 
-function changeCatName(newName) {
+function changeCatName() {
     console.log('[old name]', cat.getName);
-    cat.setNewName = newName;
+    cat.setNewName = prompt('Как теперь будут звать вашего питомца?');
     console.log('[new name]', cat.getName);
 }
 
@@ -436,19 +443,29 @@ function getAnimalNameByPrototype() {
     Cat.prototype.getAnimalNameByPrototype = function () { return this.name }
 
     console.log(cat.getAnimalNameByPrototype());
-
-    changeCatName(prompt('Введите новое имя животного:'));
-
+    changeCatName();
     console.log(cat.getAnimalNameByPrototype());
 }
 
 
-btn.addEventListener('click', menu);
+function addToBlackboard(text) {
+    blackboard.textContent = 0;
+    blackboard.textContent = text;
+}
 
+(function addAllEventListener() {
+    const mainFunction = [showChoosenCategory, showAllAnimals, addNewAnimal, deleteAnimal, sortingAnimalArray, filterAnimalsInArray, clearBlackboard];
+    const secondFunction = [printAllTestInstans, testClassOnCat, changeCatName, getAllAnimalData, getAnimalNameByPrototype];
 
+    for (let i = 0; i < mainBtnArray.length; i++) {
+        mainBtnArray[i].addEventListener('click', function () {
+            mainFunction[i](animalArray);
+        });
+    }
 
-//* создать абстрактный класс для создания животных
-//* добавить возможность редактировать имя животного
-//* дать каждому животному айДи, не вручную, а при помощи итератора
-//* создать функцию гет при помощи которой будем получать все данные о животном
-//?* через прототип добавить возможность получать имя животного
+    for (let i = 0; i < secondBtnArray.length; i++) {
+        secondBtnArray[i].addEventListener('click', function () {
+            secondFunction[i](animalArray);
+        });
+    }
+})();

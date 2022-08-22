@@ -24,12 +24,12 @@ class Animal {
     }
     
     giveVoice() {
-        console.log(this.voice);
+        addToBlackboard(this.voice);
     }
 
 
     calculateAnimalAge() {
-        console.log(`After ${this.FUTURE_AGE} years ur animal will be ${this.age + this.FUTURE_AGE} years old!`);
+        addToBlackboard(`After ${this.FUTURE_AGE} years ur animal will be ${this.age + this.FUTURE_AGE} years old!`);
     }
 
     sleep() {}
@@ -38,21 +38,21 @@ class Animal {
 }
 
 class Cat extends Animal {
-    constructor(name, food) {
-        super(name);
+    constructor(name, age, voice, category, id, food) {
+        super(name, age, voice, category, id);
         this.food = food;
     }
 
     sleep() {
-        console.log(`${this.name} is sleep. Zzzzzzzzzzzzz`);
+        addToBlackboard(`${this.name} is sleep. Zzzzzzzzzzzzz`);
     }
 
     eat() {
-        console.log(`${this.name} is eating ${this.food} now`);
+        addToBlackboard(`${this.name} is eating ${this.food} now`);
     }
 
     sayMeow() {
-        console.log('meow');
+        addToBlackboard('meow');
     }
 
     get getName() {
@@ -72,98 +72,19 @@ class Cat extends Animal {
     }
 }
 
-// function menu() {
-//     const userFunctionChoosen = prompt(`Какую функцию выберем?
-// 1) Просмотреть конкретную категорию
-// 2) Все животные
-// 3) Добавить животное
-// 4) Удалить животное
-// 5) Сортировать список животных
-// 6) Фильтровать по категории
-// 7) Выйти
-// 8) Создать кота для теста`);
-
-//     checkUserInput(userFunctionChoosen);
-
-//     functionChooseHandler(userFunctionChoosen);
-// }
-
-// function checkUserInput(userFunctionChoosen) {
-//     if (
-//         /1|2|3|4|5|6|7|8/g.test(userFunctionChoosen) &&
-//         !isNaN(+userFunctionChoosen)
-//     ) {
-//         return;
-//     } else {
-//         alert('Ты ввел неверное значение!');
-//         menu();
-//         return;
-//     }
-// }
-
-// function functionChooseHandler(choosenFunc) {
-//     // 1st variant
-//     // const functionArray = [showChoosenCategory, showAllAnimals, addNewAnimal, deleteAnimal, sortingAnimalArray, filterAnimalsInArray, exit];
-//     // functionArray[+choosenFunc - 1](animalArray);
-
-//     // 2nd variant
-//     switch (choosenFunc) {
-//         case '1':
-//             showChoosenCategory(animalArray);
-//             break;
-        
-//         case '2':
-//             showAllAnimals(animalArray);
-//             break;
-
-//         case '3':
-//             addNewAnimal(animalArray);
-//             break;
-
-//         case '4':
-//             deleteAnimal(animalArray);
-//             break;
-
-//         case '5':
-//             sortingAnimalArray(animalArray);
-//             break;
-
-//         case '6':
-//             filterAnimalsInArray(animalArray);
-//             break;
-
-//         case '7':
-//             exit();
-//             break;
-
-//         case '8':
-//             testClassOnCat();
-//             break;
-    
-//         default:
-//             break;
-//     }
-
-//     if (choosenFunc != '7') {
-//         menu();
-//         return;
-//     }
-// }
-
-// ------------------------------------------
 
 function showChoosenCategory(animalArray) {
     const choosenCategory = prompt('Животных какой категории тебе показать?');
 
     if (!checkChoosenCategoryData(choosenCategory)) {
         alert('Такой категории нету!');
-        showChoosenCategory(animalArray);
         return;
     }
 
+    printSeparator();
     animalArray.forEach(function (elem) {
         if (elem.category === choosenCategory) {
-            alert(`name: ${elem.name}
+            addToBlackboard(`name: ${elem.name}
 age: ${elem.age}
 voice: ${elem.voice}
 category: ${elem.category}
@@ -182,15 +103,16 @@ function showAllAnimals(animalArray) {
     if (isArrayEmpty(animalArray)) {
         alert('Пока что нету никаких животных!');
         return;
-    } else {
-        animalArray.forEach((elem) => {
-            alert(`name: ${elem.name}
+    }
+
+    printSeparator();
+    animalArray.forEach((elem) => {
+        addToBlackboard(`name: ${elem.name}
 age: ${elem.age}
 voice: ${elem.voice}
 category: ${elem.category}
 id: ${elem.id}`);
-        });
-    }
+    });
 }
 
 function isArrayEmpty(array) {
@@ -220,13 +142,13 @@ function addNewAnimal(animalArray) {
     //? console.log(animal);
     
     //! var 2 (new)
+    printSeparator();
     const animal = new Animal(animalName, animalAge, animalVoice, animalCategory, 228);
-    console.log(animal);
+    addToBlackboard(convertObjDataToText(animal));
     
     if (animalArray.length === 0 || checkAnimalsNameOnSame(animalArray, animalName)) {
         animalArray.push(animal);
         getIdEachAnimal(animalArray);
-        console.log(animalArray);
     } else { 
         alert('Животное с таким именем уже существует!');
         addNewAnimal(animalArray);
@@ -294,6 +216,10 @@ function checkAnimalsNameOnSame(animalArray, nameForCheck) {
     return !animalArray.some((element) => element.name === nameForCheck);
 }
 
+function convertObjDataToText(animal) {
+    return `name: ${animal.name}\nage: ${animal.age}\nvoice: ${animal.voice}\ncategory: ${animal.category}\nid: ${animal.id}`;
+}
+
 // ------------------------------------------
 
 function deleteAnimal(animalArray) {
@@ -305,7 +231,8 @@ function deleteAnimal(animalArray) {
         }
     });
 
-    console.log(animalArray);
+    printSeparator();
+    addToBlackboard('Животное удаленно!');
 }
 
 // ------------------------------------------
@@ -316,7 +243,11 @@ function sortingAnimalArray(animalArray) {
         return;
     }
 
-    const sortingFunc = prompt('Как будем сортировать животных?\n1) По увеличению\n2) По уменьшению');
+    const sortingFunc = prompt('Как будем сортировать животных?\n1) По увеличению\n2) По уменьшению\nНапиши q, чтоб выйти');
+
+    if (sortingFunc === 'q') {
+        return;
+    }
 
     if (!checkSortingFuncData(sortingFunc)) {
         alert('Данные не валидны!');
@@ -337,7 +268,8 @@ function sortingAnimalArray(animalArray) {
             break;
     }
 
-    console.log(animalArray);
+    printSeparator();
+    addToBlackboard('Список животных отсортирован!');
 }
 
 function checkSortingFuncData(sortingFunc) {
@@ -399,61 +331,73 @@ function filterAnimalsInArray(arrayForFilter) {
         }
     });
 
-    console.log(arrayForFilter);
+    printSeparator();
+    addToBlackboard('Список животных отфильтрован!');
 }
 
 // ------------------------------------------
 
 function clearBlackboard() {
-    addToBlackboard('');
+    blackboard.textContent = '';
 }
 
 // ------------------------------------------
 
 const animal = new Animal('hui', 18, 'uh', 'sea', 294389);
-const cat = new Cat('nigga', 'fish');
+const cat = new Cat('nigga', 9, 'gug', 'pets', 130459, 'fish');
 
 function printAllTestInstans() {
-    console.log(animal);
-    console.log(cat);
+    printSeparator();
+
+    addToBlackboard(`-------------------------[animal]--------------------------\n${convertObjDataToText(animal)}`);
+    addToBlackboard(`---------------------------[cat]----------------------------\n${convertObjDataToText(cat)}`);
 }
 
 function testClassOnCat() {
+    printSeparator();
+
     animal.eat();
     animal.sleep();
     animal.calculateAnimalAge();
     
-    cat.eat();
     cat.sayMeow();
+    cat.eat();
     cat.sleep();
 }
 
 function changeCatName() {
-    console.log('[old name]', cat.getName);
+    printSeparator();
+
+    getAnimalNameByPrototype(); // надо запустить эту fucktion, чтоб инициализировать cat.getAnimalNameByPrototype()
+
+    addToBlackboard(`[old name]: ${cat.getAnimalNameByPrototype()}`);
     cat.setNewName = prompt('Как теперь будут звать вашего питомца?');
-    console.log('[new name]', cat.getName);
+    addToBlackboard(`[new name]: ${cat.getAnimalNameByPrototype()}`);
 }
 
 function getAllAnimalData() {
-    console.log(cat.getAllDataV1);
-    console.log(cat.getAllDataV2);
+    printSeparator();
+
+    addToBlackboard(`Cat data: ${cat.getAllDataV2.join(' ')}`);
 }
 
 function getAnimalNameByPrototype() {
     Cat.prototype.getAnimalNameByPrototype = function () { return this.name }
 
-    console.log(cat.getAnimalNameByPrototype());
-    changeCatName();
-    console.log(cat.getAnimalNameByPrototype());
+    printSeparator();
+    addToBlackboard(`[name]: ${cat.getAnimalNameByPrototype()}`);
 }
 
 
 function addToBlackboard(text) {
-    blackboard.textContent = 0;
-    blackboard.textContent = text;
+    blackboard.textContent += `${text}\n`;
 }
 
-(function addAllEventListener() {
+function printSeparator() {
+    addToBlackboard('===================================');
+}
+
+(function () {
     const mainFunction = [showChoosenCategory, showAllAnimals, addNewAnimal, deleteAnimal, sortingAnimalArray, filterAnimalsInArray, clearBlackboard];
     const secondFunction = [printAllTestInstans, testClassOnCat, changeCatName, getAllAnimalData, getAnimalNameByPrototype];
 
